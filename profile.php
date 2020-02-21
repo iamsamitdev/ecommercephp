@@ -8,43 +8,62 @@ if(empty($_SESSION['session_employee_number'])){
   header('location:index.php');
 }
 
-
 // ส่วนของการอัพเดทข้อมูลผู้ใช้
-if(@$_POST['btnUpdate']){
+if(@$_POST['btnUpdate'])
+{
   $firstName = $_POST['firstName'];
   $lastName = $_POST['lastName'];
   $email = $_POST['email'];
   
   // ส่วนของการอัพโหลดไฟล์
   // เช็คว่าผู้ใช้อัพโหลดมาหรือไม่
-  if(!empty($_FILES['picprofile']['name']))
-  {
-      $inputname = "picprofile";
-      $maxfilesize = "6000000";
-      $thumbdirectory = "img"; // โฟล์เดอร์ภาพย่อ
-      $thumbwidth = "400";
-      $thumbheight = "400";
-      // Upload รูปเข้า folder
-      $path = $_FILES[$inputname]['name'];
+	if(!empty($_FILES['picprofile']['name']))
+	{
+            $inputname = "picprofile";
+            $maxfilesize = "6000000";
+            $orgdirectory = "img/original"; // โฟลเดอร์ภาพต้นฉบับ
+            $thumbdirectory = "img/thumbnail"; // โฟล์เดอร์ภาพย่อ
+            $thumbwidth = "400";
+            $thumbheight = "400";
+            // Upload รูปเข้า folder
+            $path = $_FILES[$inputname]['name'];
 
-      $ext = pathinfo($path, PATHINFO_EXTENSION);
+            $ext = pathinfo($path, PATHINFO_EXTENSION);
 
-      if ($ext == "jpg" or $ext == "jpeg" or $ext == "png" or $ext == "gif") {
-          $file_name = time(). "." . pathinfo($_FILES[$inputname]['name'], PATHINFO_EXTENSION);
-          $file_size = $_FILES[$inputname]['size'];
-          $file_temp = $_FILES[$inputname]['tmp_name'];
-          $file_type = $_FILES[$inputname]['type'];
+            if ($ext == "jpg" or $ext == "jpeg" or $ext == "png" or $ext == "gif") {
+                $filename = time(). "." . pathinfo($_FILES[$inputname]['name'], PATHINFO_EXTENSION);
+                $filesize = $_FILES[$inputname]['size'];
+                $filetmp = $_FILES[$inputname]['tmp_name'];
+                $filetype = $_FILES[$inputname]['type'];
 
-          $upload = genius_uploadimg($inputname, $file_name, $file_size, $file_temp, $file_type, $maxfilesize, $thumbdirectory, $thumbwidth, $thumbheight);
-      }else{
-          echo "File type not allow";
-          exit();
-      }
+                $upload = genius_uploadimg_with_org(
+                	$inputname, 
+			    	$filename, 
+				    $filesize, 
+				    $filetmp, 
+				    $filetype, 
+				    $maxfilesize, 
+				    $orgdirectory, 
+				    $thumbdirectory, 
+				    $thumbwidth, 
+				    $thumbheight);
+            }else{
+                echo "File type not allow";
+                exit();
+            }
+	  }
+
+  // ตรวจว่าผู้ใช้เลือกรูปมาหรือไม่
+  if(!empty($_FILES['picprofile']['name'])){
+    $sql_update = "UPDATE employees 
+        SET firstName='$firstName', lastName='$lastName', email='$email', picprofile='$filename' 
+        WHERE employeeNumber='$_SESSION[session_employee_number]'";
+  }else{
+    $sql_update = "UPDATE employees 
+    SET firstName='$firstName', lastName='$lastName', email='$email'
+    WHERE employeeNumber='$_SESSION[session_employee_number]'";
   }
 
-  $sql_update = "UPDATE employees 
-          SET firstName='$firstName', lastName='$lastName', email='$email'
-          WHERE employeeNumber='$_SESSION[session_employee_number]'";
   $query_update = mysqli_query($connect, $sql_update);
 }
 
@@ -127,6 +146,7 @@ $data_employee = mysqli_fetch_assoc($query_employee);
             <div class="form-group row">
                 <label for="email" class="col-sm-2 col-form-label">Picture profile</label>
                 <div class="col-sm-10">
+                <img src="img/thumbnail/<?php echo $data_employee['picprofile'];?>" height="100">
                 <input type="file" class="form-control" id="picprofile" name="picprofile">
                 </div>
             </div>
@@ -175,7 +195,7 @@ $data_employee = mysqli_fetch_assoc($query_employee);
         <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
         <div class="modal-footer">
           <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="login.html">Logout</a>
+          <a class="btn btn-primary" href="index.php">Logout</a>
         </div>
       </div>
     </div>

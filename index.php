@@ -41,7 +41,7 @@
                   </div>
                   <form class="user" action="index.php" method="post">
                     <div class="form-group">
-                      <input type="email" class="form-control form-control-user" id="email" name="email" aria-describedby="emailHelp" placeholder="Email" value="dmurphy@classicmodelcars.com">
+                      <input type="email" class="form-control form-control-user" id="email" name="email" aria-describedby="emailHelp" placeholder="Email" value="samitkoyomsssdd@gmail.com">
                     </div>
                     <div class="form-group">
                       <input type="password" class="form-control form-control-user" id="password" name="password" placeholder="Password" value="1234">

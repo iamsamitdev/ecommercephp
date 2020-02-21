@@ -30,6 +30,24 @@
     <span>Products</span></a>
 </li>
 
+<li class="nav-item">
+  <a class="nav-link" href="filter_product.php">
+    <i class="fab fa-product-hunt"></i>
+    <span>Filter product</span></a>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link" href="product_barcode.php">
+    <i class="fas fa-barcode"></i>
+    <span>Product barcode</span></a>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link" href="read_excel.php">
+    <i class="far fa-file-excel"></i>
+    <span>Read Excel</span></a>
+</li>
+
 <!-- Nav Item - Pages Collapse Menu -->
 <li class="nav-item">
   <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
